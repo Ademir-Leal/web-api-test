@@ -12,6 +12,6 @@ public class HomeController {
 
     @GetMapping("/home")
     public String greeting(@RequestParam(value = "name", defaultValue = "World") String name) {
-        return "Test success ok!";
+        return "Test success ok now with pipeline file!";
     }
 }

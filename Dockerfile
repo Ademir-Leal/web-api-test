@@ -1,5 +1,5 @@
 # Use uma imagem oficial do OpenJDK como base
-FROM openjdk:24-jdk-alpine
+FROM openjdk:24-jdk
 
 # Define o diretório de trabalho dentro do container
 WORKDIR /app
@@ -8,7 +8,7 @@ WORKDIR /app
 COPY target/webapitest-0.0.1-SNAPSHOT.jar app.jar
 
 # Exponha a porta que sua aplicação Spring Boot está usando (geralmente 8080)
-EXPOSE 8080
+EXPOSE 80
 
 # Comando para rodar a aplicação
 ENTRYPOINT ["java", "-jar", "app.jar"]
