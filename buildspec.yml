@@ -4,10 +4,6 @@ env:
   variables:
     MAVEN_OPTS: "-Xmx2g"
     SPRING_PROFILES_ACTIVE: "prod"  # Altere conforme necessário para o seu perfil
-    IMAGE_REPO_NAME: "personal-test/web-api"
-    IMAGE_TAG: "latest"
-    AWS_ACCOUNT_ID: "284174286782"
-    AWS_DEFAULT_REGION: "us-east-2"
 
 phases:
   install:
@@ -21,31 +17,22 @@ phases:
   pre_build:
     commands:
       - mvn clean
-      - echo Logging in to Amazon ECR...
-      - aws ecr get-login-password --region $AWS_DEFAULT_REGION | docker login --username AWS --password-stdin $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com
 
   build:
     commands:
       - echo Building the app...
       - mvn package -DskipTests  # Compilando o projeto, sem rodar os testes
       - echo Build done.
-      - echo Wrapping JAR...
-      - ls target/  # Lista o diretório target para verificar o arquivo JAR gerado
-      - mv target/*.jar app.jar  # Renomeia o arquivo JAR para app.jar
-      - echo Building the Docker image...
-      - docker build -t $IMAGE_REPO_NAME:$IMAGE_TAG .
-      - docker tag $IMAGE_REPO_NAME:$IMAGE_TAG $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_REPO_NAME:$IMAGE_TAG
 
   post_build:
     commands:
-      - echo Build completed on `date`
-      - echo Pushing the Docker image...
-      - docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_REPO_NAME:$IMAGE_TAG
+      - echo Wrapping JAR...
+      - ls target/  # Lista o diretório target para verificar o arquivo JAR gerado
+      - mv target/*.jar app.jar  # Renomeia o arquivo JAR para app.jar
 
 artifacts:
-  files:
-    - app.jar  # Arquivo final do JAR
-  discard-paths: yes  # Descarta os caminhos de diretórios
+    files:
+      - '**/*'
 
 cache:
   paths:
